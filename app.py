@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
+import sys
 
-
-def main():
-    print 1
-
+from process import process, MIN_TIME, MAX_TIME
 
 if __name__ == '__main__':
-    main()
+    print sys.argv
+    process(sys.argv[1], sys.argv[2])
