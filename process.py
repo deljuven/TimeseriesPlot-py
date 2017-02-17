@@ -20,7 +20,7 @@ def process(in_file, out_file=None, interval=0):
 def big_file_read_test(in_file, interval=0, flag=False):
     dict_ = {}
     begin = datetime.now()
-    with open(in_file, 'r') as in_file, open('./read_test.log', 'w') as log:
+    with open(in_file, 'r') as in_file, open('./log/read_test.log', 'w') as log:
         index = 0
         for line in in_file:
             index += 1
@@ -42,7 +42,7 @@ def big_file_read_test(in_file, interval=0, flag=False):
 
 def read_from_file(file_, dict_, interval):
     begin = datetime.now()
-    with open(file_, 'r') as in_file, open('./proc.log', 'w') as log:
+    with open(file_, 'r') as in_file, open('./log/proc.log', 'w') as log:
         index = 0
         for line in in_file:
             index += 1
