@@ -5,6 +5,7 @@ from operator import itemgetter
 
 MIN_TIME = datetime.strptime('1998-04-30 21:30:17', '%Y-%m-%d %H:%M:%S')
 MAX_TIME = datetime.strptime('1998-7-26 21:59:55', '%Y-%m-%d %H:%M:%S')
+BUFF_COUNT = 10000
 
 
 def process(in_file, out_file=None, interval=0):
@@ -16,12 +17,12 @@ def process(in_file, out_file=None, interval=0):
 
 
 def read_from_file(file_, dict_, interval):
+    begin = datetime.now()
     with open(file_, 'r') as in_file, open('./proc.log', 'w') as log:
         index = 0
         for line in in_file:
             index += 1
             print "line no %d" % index
-            log.write("%d" % index)
             if interval == 0:
                 key = data_process(line)
             else:
@@ -32,6 +33,9 @@ def read_from_file(file_, dict_, interval):
             else:
                 val = 1
             dict_[key] = val
+        duration = (datetime.now() - begin).total_seconds()
+        log.write("read and parse cost seconds %s" % duration)
+    print (datetime.now() - begin).total_seconds()
     return dict_
 
 
@@ -50,7 +54,29 @@ def data_process(line):
 def output(out_file, statistics, hint_statics):
     hint_file = out_file + ".hint"
     with open(out_file, 'w') as fp, open(hint_file, 'w') as hfp:
+        pt_count = 0
+        ht_count = 0
+        pt_buff = ""
+        ht_buff = ""
         for point in statistics:
-            fp.write("%s %s\n" % (point[0], point[1]))
+            pt_buff += "%s %s\n" % (point[0], point[1])
+            if pt_count == BUFF_COUNT:
+                fp.write(pt_buff)
+                fp.flush()
+                pt_count = 0
+                pt_buff = ""
+            pt_count += 1
         for hint in hint_statics:
-            hfp.write("%s %s\n" % (hint[0], hint[1]))
+            ht_buff += "%s %s\n" % (hint[0], hint[1])
+            if ht_count == BUFF_COUNT:
+                hfp.write(ht_buff)
+                hfp.flush()
+                ht_count = 0
+                ht_buff = ""
+            ht_count += 1
+        if len(pt_buff) > 0:
+            fp.write(pt_buff)
+            fp.flush()
+        if len(ht_buff) > 0:
+            hfp.write(ht_buff)
+            hfp.flush()
