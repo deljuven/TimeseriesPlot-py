@@ -6,6 +6,7 @@ from operator import itemgetter
 MIN_TIME = datetime.strptime('1998-04-30 21:30:17', '%Y-%m-%d %H:%M:%S')
 MAX_TIME = datetime.strptime('1998-7-26 21:59:55', '%Y-%m-%d %H:%M:%S')
 BUFF_COUNT = 10000
+REGULAR = re.compile(r'\[(\S+)\s(\S+)\]')
 
 
 def process(in_file, out_file=None, interval=0):
@@ -16,12 +17,24 @@ def process(in_file, out_file=None, interval=0):
     output(out_file, ordered, hint_order)
 
 
-def big_file_read_test(in_file):
+def big_file_read_test(in_file, interval=0, flag=False):
+    dict_ = {}
     begin = datetime.now()
     with open(in_file, 'r') as in_file, open('./read_test.log', 'w') as log:
         index = 0
         for line in in_file:
             index += 1
+            if flag:
+                if interval == 0:
+                    key = data_process(line)
+                else:
+                    key = data_process(line) / interval
+                val = dict_.get(key)
+                if val:
+                    val += 1
+                else:
+                    val = 1
+                dict_[key] = val
         duration = (datetime.now() - begin).total_seconds()
         log.write("read and parse cost seconds %s" % duration)
     print (datetime.now() - begin).total_seconds()
@@ -33,7 +46,7 @@ def read_from_file(file_, dict_, interval):
         index = 0
         for line in in_file:
             index += 1
-            print "line no %d" % index
+            # print "line no %d" % index
             if interval == 0:
                 key = data_process(line)
             else:
@@ -57,8 +70,7 @@ def parse_time(time_str):
 
 
 def data_process(line):
-    regular = re.compile(r'\[(\S+)\s(\S+)\]')
-    data = re.search(regular, line)
+    data = re.search(REGULAR, line)
     return parse_time(data.group(1))
 
 
