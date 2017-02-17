@@ -16,6 +16,17 @@ def process(in_file, out_file=None, interval=0):
     output(out_file, ordered, hint_order)
 
 
+def big_file_read_test(in_file):
+    begin = datetime.now()
+    with open(in_file, 'r') as in_file, open('./read_test.log', 'w') as log:
+        index = 0
+        for line in in_file:
+            index += 1
+        duration = (datetime.now() - begin).total_seconds()
+        log.write("read and parse cost seconds %s" % duration)
+    print (datetime.now() - begin).total_seconds()
+
+
 def read_from_file(file_, dict_, interval):
     begin = datetime.now()
     with open(file_, 'r') as in_file, open('./proc.log', 'w') as log:
