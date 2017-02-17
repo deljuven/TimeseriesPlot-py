@@ -3,4 +3,6 @@
 *.iml
 *.pyc
 input
+output
 run.sh
+*.log
