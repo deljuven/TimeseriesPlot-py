@@ -16,8 +16,12 @@ def process(in_file, out_file=None, interval=0):
 
 
 def read_from_file(file_, dict_, interval):
-    with open(file_, 'r') as in_file:
+    with open(file_, 'r') as in_file, open('./proc.log', 'w') as log:
+        index = 0
         for line in in_file:
+            index += 1
+            print "line no %d" % index
+            log.write("%d" % index)
             if interval == 0:
                 key = data_process(line)
             else:
