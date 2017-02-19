@@ -18,6 +18,8 @@ if __name__ == '__main__':
             if len(args) == 4:
                 process(args[2], args[3])
             elif len(args) == 5:
-                process(args[2], args[3], args[4])
+                process(args[2], args[3], float(args[4]))
             elif len(args) == 6:
-                process(args[2], args[3], args[4], args[5])
+                process(args[2], args[3], float(args[4]), int(args[5]))
+            elif len(args) == 7:
+                process(args[2], args[3], float(args[4]), int(args[5]), int(args[6]))

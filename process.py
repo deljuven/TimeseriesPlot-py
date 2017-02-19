@@ -5,29 +5,29 @@ from operator import itemgetter
 BUFF_COUNT = 1000
 
 
-def process(in_file, out_file=None, start=0, interval=5):
+# start and duration for day, interval for minute
+def process(in_file, out_file=None, start=0, duration=100, interval=5):
     result = {}
-    result = read_from_file(in_file, result, start * 1440 / interval, interval * 60)
+    result = read_from_file(in_file, result, start, duration, interval * 60)
     ordered = sorted(result.items(), key=itemgetter(0))
     output(out_file, ordered)
 
 
-def read_from_file(file_, dict_, start, interval):
+def read_from_file(file_, dict_, start, duration, interval):
     begin = datetime.now()
+    end = (start + duration) * 86400
+    start *= 86400
     with open(file_, 'r') as in_file, open('./log/process.log', 'w') as log:
-        index = 0
         for line in in_file:
-            index += 1
             point = parse_line(line)
-            if start > point[0]:
-                continue
-            key = point[0] / interval
-            val = dict_.get(key)
-            if val:
-                val += point[1]
-            else:
-                val = 1
-            dict_[key] = val
+            if start <= point[0] < end:
+                key = point[0] / interval
+                val = dict_.get(key)
+                if val:
+                    val += point[1]
+                else:
+                    val = point[1]
+                dict_[key] = val
         duration = (datetime.now() - begin).total_seconds()
         log.write("read and parse cost seconds %s" % duration)
     print (datetime.now() - begin).total_seconds()
