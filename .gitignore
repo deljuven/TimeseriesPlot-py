@@ -4,6 +4,6 @@
 *.pyc
 input
 output
-run.sh
+*.sh
 *.log
 log
