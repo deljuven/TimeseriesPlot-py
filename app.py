@@ -10,7 +10,9 @@ if __name__ == '__main__':
         print 'wtf'
     else:
         if args[1] == 'pre':
-            if len(args) > 4:
+            if len(args) > 5:
+                pre_process(args[2], args[3], args[4], args[5])
+            elif len(args) > 4:
                 pre_process(args[2], args[3], args[4])
             else:
                 pre_process(args[2], args[3])

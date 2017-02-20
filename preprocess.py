@@ -9,9 +9,9 @@ BUFF_COUNT = 10000
 REGULAR = re.compile(r'\[(\S+)\s(\S+)\]')
 
 
-def pre_process(in_file, out_file=None, interval=0):
+def pre_process(in_file, out_file=None, sub='all', interval=0):
     result = {}
-    result = read_from_file(in_file, result, interval * 60)
+    result = read_from_file(in_file, result, sub, interval * 60)
     ordered = sorted(result.items(), key=itemgetter(0))
     hint_order = sorted(result.items(), key=itemgetter(1), reverse=True)
     output(out_file, ordered, hint_order)
@@ -40,13 +40,13 @@ def big_file_read_test(in_file, interval=0, flag=False):
     print (datetime.now() - begin).total_seconds()
 
 
-def read_from_file(file_, dict_, interval):
+def read_from_file(file_, dict_, sub, interval):
     begin = datetime.now()
-    with open(file_, 'r') as in_file, open('./log/pre_proc.log', 'w') as log:
+    log_file = './log/pre_proc_%s.log' % sub
+    with open(file_, 'r') as in_file, open(log_file, 'w') as log:
         index = 0
         for line in in_file:
             index += 1
-            # print "line no %d" % index
             if interval == 0:
                 key = data_process(line)
             else:
