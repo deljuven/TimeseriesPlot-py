@@ -17,29 +17,6 @@ def pre_process(in_file, out_file=None, sub='all', interval=0):
     output(out_file, ordered, hint_order)
 
 
-def big_file_read_test(in_file, interval=0, flag=False):
-    dict_ = {}
-    begin = datetime.now()
-    with open(in_file, 'r') as in_file, open('./log/read_test.log', 'w') as log:
-        index = 0
-        for line in in_file:
-            index += 1
-            if flag:
-                if interval == 0:
-                    key = data_process(line)
-                else:
-                    key = data_process(line) / interval
-                val = dict_.get(key)
-                if val:
-                    val += 1
-                else:
-                    val = 1
-                dict_[key] = val
-        duration = (datetime.now() - begin).total_seconds()
-        log.write("read and parse cost seconds %s" % duration)
-    print (datetime.now() - begin).total_seconds()
-
-
 def read_from_file(file_, dict_, sub, interval):
     begin = datetime.now()
     log_file = './log/pre_proc_%s.log' % sub
