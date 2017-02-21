@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from datetime import datetime
 from operator import itemgetter
 
@@ -36,7 +37,10 @@ def read_from_file(file_, dict_, start, duration, interval):
 
 def output(out_file, statistics):
     if not out_file:
-        out_file = './interval_5.out'
+        out_file = './output/interval_5.out'
+    dir_ = os.path.dirname(os.path.abspath(out_file))
+    if not os.path.exists(dir_):
+        os.mkdir(dir_)
     with open(out_file, 'w') as fp:
         pt_count = 0
         pt_buff = ""
